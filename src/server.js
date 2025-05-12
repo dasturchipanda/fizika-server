@@ -3,6 +3,7 @@ import path from 'path';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 import MainRouter from './module/routes.js'
 import cors from 'cors';
+import { pool } from './utils/mysql.js';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
     message: `The requested URL http://localhost:9000${req.originalUrl} was not found on this server.`
   });
 });
+
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {

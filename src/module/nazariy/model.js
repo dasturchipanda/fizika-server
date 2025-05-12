@@ -1,22 +1,31 @@
-import { pool } from "../../utils/pg.js";
+import { pool } from "../../utils/mysql.js";
 
+// Barcha nazariy darslarni olish
 const getNazariy = async () => {
-  const res = await pool.query(`SELECT * from nazariy`);
-  return res.rows;
+  const [rows] = await pool.query("SELECT * FROM nazariy");
+  return rows;
 };
 
-
+// Yangi nazariy dars qo‘shish
 const createNazariy = async (nazariy_title, nazariy_file, nazariy_video, nazariy_test) => {
-  const res = await pool.query(
-    'INSERT INTO nazariy (nazariy_title, nazariy_file, nazariy_video, nazariy_test) VALUES ($1, $2, $3, $4) RETURNING *',
+  const [result] = await pool.query(
+    "INSERT INTO nazariy (nazariy_title, nazariy_file, nazariy_video, nazariy_test) VALUES (?, ?, ?, ?)",
     [nazariy_title, nazariy_file, nazariy_video, nazariy_test]
   );
-  return res.rows[0];
+
+  return {
+    nazariy_id: result.insertId,
+    nazariy_title,
+    nazariy_file,
+    nazariy_video,
+    nazariy_test
+  };
 };
 
+// Nazariy darsni o‘chirish
 const deleteNazariy = async (id) => {
-  const res = await pool.query('DELETE FROM nazariy WHERE nazariy_id = $1 RETURNING *', [id]);
-  return res.rows[0];
+  const [result] = await pool.query("DELETE FROM nazariy WHERE nazariy_id = ?", [id]);
+  return result.affectedRows > 0;
 };
 
 export { getNazariy, createNazariy, deleteNazariy };

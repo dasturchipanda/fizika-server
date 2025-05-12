@@ -8,8 +8,9 @@ const getAllAmaliy = async (req, res) => {
     const amaliylar = await getAmaliy();
     res.json(amaliylar);
   } catch (error) {
-    res.status(500).json({ error: error.message});
-  }
+  console.error("❌ Xatolik:", error); // bu qatorni qo‘shing
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 // Create new car

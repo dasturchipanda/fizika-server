@@ -1,22 +1,28 @@
-import { pool } from "../../utils/pg.js";
+import { pool } from "../../utils/mysql.js"; // pg.js emas, mysql.js bo‘lishi kerak
 
+// Barcha ma’lumotlarni olish
 const getAmaliy = async () => {
-  const res = await pool.query(`SELECT * from amaliy`);
-  return res.rows;
+  const [rows] = await pool.query("SELECT * FROM amaliy");
+  return rows;
 };
 
-
+// Yangi amaliy yozuv qo‘shish
 const createAmaliy = async (amaliy_title, amaliy_file) => {
-  const res = await pool.query(
-    'INSERT INTO amaliy (amaliy_title, amaliy_file) VALUES ($1, $2) RETURNING *',
+  const [result] = await pool.query(
+    "INSERT INTO amaliy (amaliy_title, amaliy_file) VALUES (?, ?)",
     [amaliy_title, amaliy_file]
   );
-  return res.rows[0];
+  return {
+    amaliy_id: result.insertId,
+    amaliy_title,
+    amaliy_file
+  };
 };
 
+// Amaliy yozuvni o‘chirish
 const deleteAmaily = async (id) => {
-  const res = await pool.query('DELETE FROM amaily WHERE amaliy_id = $1 RETURNING *', [id]);
-  return res.rows[0];
+  const [result] = await pool.query("DELETE FROM amaliy WHERE amaliy_id = ?", [id]);
+  return result.affectedRows > 0; // true agar o‘chirildi, false agar topilmadi
 };
 
 export { getAmaliy, createAmaliy, deleteAmaily };
