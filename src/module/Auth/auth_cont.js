@@ -54,8 +54,9 @@ export const registerWithCode = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  console.error("❌ Xatolik:", error); // bu qatorni qo‘shing
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 
@@ -63,10 +64,12 @@ export const registerWithCode = async (req, res) => {
 const getAllusers = async (req, res) => {
   try {
     const users = await getUsers();
+    
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
+  console.error("❌ Xatolik:", error); // bu qatorni qo‘shing
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 const getOneUser = async (req, res) => {
@@ -74,8 +77,9 @@ const getOneUser = async (req, res) => {
     const user = await getUserbyId(req.params.id);
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
+  console.error("❌ Xatolik:", error); // bu qatorni qo‘shing
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 // Tizimga kirish
@@ -98,8 +102,9 @@ const loginUser = async (req, res) => {
     const token = generateToken(user[0]);
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  console.error("❌ Xatolik:", error); // bu qatorni qo‘shing
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 export {getAllusers, loginUser, getOneUser};
