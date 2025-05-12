@@ -1,30 +1,37 @@
-import { pool } from "../../utils/pg.js";
+import { pool } from "../../utils/mysql.js";
 
+// Faqat oddiy foydalanuvchilarni olish
 const getUsers = async () => {
-  const res = await pool.query(`SELECT * FROM users WHERE user_role = 'user'`);
-  return res.rows;
+  const [rows] = await pool.query("SELECT * FROM users WHERE user_role = 'user'");
+  return rows;
 };
 
+// Userni ID orqali topish
 const getUserbyId = async (user_id) => {
-  const res = await pool.query('SELECT * FROM users WHERE user_id = $1',
-  [user_id]);
-  return res.rows;
+  const [rows] = await pool.query("SELECT * FROM users WHERE user_id = ?", [user_id]);
+  return rows;
 };
 
-const Register = async (user_email, user_password, user_firstname, user_lastname,
-  user_ageyear) => {
-  const res = await pool.query(
-    'INSERT INTO users (user_email, user_password, user_firstname, user_lastname, user_ageyear) VALUES ($1, $2, $3 , $4, $5) RETURNING *',
-    [user_email, user_password, user_firstname, user_lastname,user_ageyear]
+// Ro‘yxatdan o‘tkazish
+const Register = async (user_email, user_password, user_firstname, user_lastname, user_ageyear) => {
+  const [result] = await pool.query(
+    "INSERT INTO users (user_email, user_password, user_firstname, user_lastname, user_ageyear) VALUES (?, ?, ?, ?, ?)",
+    [user_email, user_password, user_firstname, user_lastname, user_ageyear]
   );
-  return res.rows[0];
+  return {
+    user_id: result.insertId,
+    user_email,
+    user_password,
+    user_firstname,
+    user_lastname,
+    user_ageyear
+  };
 };
 
+// Email orqali user qidirish
 const userMatch = async (user_email) => {
-  const res = await pool.query('SELECT * FROM users WHERE user_email = $1',
-  [user_email]);
-  return res.rows;
+  const [rows] = await pool.query("SELECT * FROM users WHERE user_email = ?", [user_email]);
+  return rows;
 };
 
-
-export { getUsers, Register, userMatch, getUserbyId};
+export { getUsers, Register, userMatch, getUserbyId };
