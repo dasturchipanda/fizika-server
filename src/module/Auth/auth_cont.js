@@ -3,20 +3,22 @@ import {getUsers, Register, userMatch, getUserbyId} from './auth_model.js'
 import nodemailer from 'nodemailer';
 const emailCodes = new Map(); // temporary storage for email verification codes
 
+const transporter = nodemailer.createTransport({
+  host: 'mail.fizikacspu.uz',
+  port: 465,
+  secure: true, // SSL ishlatyapti
+  auth: {
+    user: 'fizikasupport@fizikacspu.uz',
+    pass: 'zetplus02', // cPanelda yaratganingiz
+  },
+});
+
 export const sendCodeToEmail = async (req, res) => {
   const { user_email } = req.body;
   const code = Math.floor(100000 + Math.random() * 900000);
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'zahriddin06@gmail.com',
-      pass: 'ojrq sfut siat xkgh', 
-    },
-  });
-
   const mailOptions = {
-    from: 'zahriddin06@gmail.com',
+    from: '"Fizika CSPU" <fizikasupport@fizikacspu.uz>',
     to: user_email,
     subject: 'Ro‘yxatdan o‘tish kodi',
     text: `Sizning tasdiqlash kodingiz: ${code}`,
@@ -27,9 +29,11 @@ export const sendCodeToEmail = async (req, res) => {
     emailCodes.set(user_email, code);
     res.status(200).json({ message: 'Kod yuborildi' });
   } catch (err) {
+    console.error('Email xatoligi:', err);
     res.status(500).json({ error: 'Kod yuborilmadi', details: err.message });
   }
 };
+
 
 export const registerWithCode = async (req, res) => {
   const { user_email, user_password, user_firstname, user_lastname, user_ageyear, code } = req.body;
