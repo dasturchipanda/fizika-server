@@ -11,6 +11,9 @@ const transporter = nodemailer.createTransport({
     user: 'fizikasupport@fizikacspu.uz',
     pass: 'zetplus02', // cPanelda yaratganingiz
   },
+  tls: {
+  rejectUnauthorized: false
+}
 });
 
 export const sendCodeToEmail = async (req, res) => {
