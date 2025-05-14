@@ -17,27 +17,27 @@ const getAllNazariy = async (req, res) => {
 const createNewNazariy = async (req, res) => {
   try {
     const { nazariy_title, nazariy_video, nazariy_test } = req.body;
-    if (!req.file) {
-      return res.status(400).json({ message: "nazariy_file requared" });
+
+    if (!req.file || !nazariy_title) {
+      return res.status(400).json({ message: "Majburiy maydonlar yetarli emas" });
     }
-    const nazariy_file = "/uploads/" + req.file.filename;
+
+    const nazariy_file = req.file.path; // Cloudinary URL
+
     const newNazariy = await createNazariy(
       nazariy_title,
       nazariy_file,
       nazariy_video,
       nazariy_test
     );
+
     res.status(201).json(newNazariy);
   } catch (error) {
-    const filePath = path.resolve("uploads", req.file.filename);
-    fs.unlink(filePath, (err) =>
-      err
-        ? console.error("Failed to delete file:", err)
-        : console.log("File successfully deleted")
-    );
-    res.status(500).json({ error: error.message });
+    console.error("❌ Xatolik:", error);
+    res.status(500).json({ error: "Server xatosi" });
   }
 };
+
 
 // Delete car
 const deleteNazariya = async (req, res) => {

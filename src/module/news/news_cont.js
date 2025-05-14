@@ -22,7 +22,8 @@ const createNewArticle = async (req, res) => {
       return res.status(400).json({ message: 'Rasm kerak' });
     }
 
-    const news_image = '/uploads/' + req.file.filename;
+    const news_image = req.file?.path; // Cloudinary URL
+
 
     const newArticle = await createArticle(news_image, news_title, news_description);
     res.status(201).json(newArticle);
