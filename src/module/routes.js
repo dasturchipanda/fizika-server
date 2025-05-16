@@ -4,7 +4,8 @@ import newsRoutes from "./news/route.js";
 import amaliyRoutes from "./amaliy/route.js";
 import testRouter from "./tests/test_routes.js";
 import nazariyRoutes from "./nazariy/route.js";
+import resultRouter from "./results/route.js";
 
 const MainRouter = Router();
 
-export default MainRouter.use('/api', [userRoutes , newsRoutes, amaliyRoutes, testRouter, nazariyRoutes])
+export default MainRouter.use('/api', [userRoutes , newsRoutes, amaliyRoutes, testRouter, nazariyRoutes, resultRouter])
